@@ -1,0 +1,16 @@
+**/.DS_Store
+**/target
+**/.daml
+**/log
+event-graph/neo4j/
+.venv
+ledger-explorer/config/config.toml
+ledger-graph-ui/config.toml
+sync.log
+plans
+.claude/
+.tokensave/
+.superpowers/
+analytics-queries.local.toml
+docs/
+.codegraph/
