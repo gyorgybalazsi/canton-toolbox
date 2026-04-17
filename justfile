@@ -22,6 +22,10 @@ explorer-sandbox-fresh:
 explorer-stop:
     pkill -f ledger-explorer || true
 
+# Look up a single update (transaction) by its ID
+get-update update_id profile="mainnet-cbtc-network-reader":
+    cargo run -p client -- get-update-by-id --profile {{profile}} --update-id {{update_id}}
+
 # Generate Rust types from DAR file(s)
 # Usage: just codegen output.rs path/to/file.dar [path/to/other.dar ...]
 codegen output +dars:

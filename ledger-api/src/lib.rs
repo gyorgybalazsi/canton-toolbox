@@ -1,5 +1,7 @@
 pub use com::daml::ledger::api::v2 as v2;
 
+pub mod serde_helpers;
+
 pub mod com {
     pub mod daml {
         pub mod ledger {

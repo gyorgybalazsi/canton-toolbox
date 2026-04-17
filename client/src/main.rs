@@ -1,6 +1,8 @@
 use clap::{Parser, Subcommand};
 
-use client::jwt::fake_jwt;
+use client::config;
+use client::get_update::get_update_by_id;
+use client::jwt::{fake_jwt, keycloak_jwt, fake_jwt_for_user};
 use client::ledger_end::get_ledger_end;
 use client::stream_updates::stream_updates;
 
@@ -68,12 +70,27 @@ enum Commands {
         #[arg(long)]
         filter: Option<String>,
     },
+    /// Look up a single update (transaction) by its ID
+    GetUpdateById {
+        /// Path to config.toml file
+        #[arg(long)]
+        config_file: Option<String>,
+        /// Profile to use (overrides active_profile in config)
+        #[arg(long, short)]
+        profile: Option<String>,
+        /// The update ID to look up
+        #[arg(long)]
+        update_id: String,
+        /// Party to filter events for (overrides parties from config)
+        #[arg(long)]
+        party: Option<String>,
+    },
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
     tracing_subscriber::fmt()
-        .with_writer(std::io::stdout)
+        .with_writer(std::io::stderr)
         .init();
     let cli = Cli::parse();
 
@@ -159,6 +176,56 @@ async fn main() -> Result<()> {
             }
             Ok(())
         }
-        
+        Commands::GetUpdateById {
+            config_file,
+            profile,
+            update_id,
+            party,
+        } => {
+            let cfg = match config_file {
+                Some(path) => config::read_config(&path, profile.as_deref())?,
+                None => config::read_config_from_toml(profile.as_deref())?,
+            };
+
+            // Determine parties
+            let parties = match party {
+                Some(p) => vec![p],
+                None => cfg
+                    .ledger
+                    .parties
+                    .filter(|p| !p.is_empty())
+                    .ok_or_else(|| {
+                        anyhow::anyhow!(
+                            "No party specified. Use --party or set parties in config profile."
+                        )
+                    })?,
+            };
+
+            // Get access token
+            let token = match cfg.keycloak {
+                Some(kc_config) => {
+                    info!("Authenticating via Keycloak at {}", kc_config.token_endpoint);
+                    keycloak_jwt(&kc_config).await?
+                }
+                None => {
+                    info!(
+                        "No Keycloak config, using fake JWT for user: {}",
+                        cfg.ledger.fake_jwt_user
+                    );
+                    fake_jwt_for_user(&cfg.ledger.fake_jwt_user)
+                }
+            };
+
+            let response = get_update_by_id(
+                &cfg.ledger.url,
+                &token,
+                &parties,
+                &update_id,
+            )
+            .await?;
+
+            println!("{}", serde_json::to_string_pretty(&response)?);
+            Ok(())
+        }
     }
 }

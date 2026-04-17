@@ -51,6 +51,7 @@
 ///
 /// - Logging. If some API errors are stored in logs, the message `Status` could
 ///      be used directly after any stripping needed for security/privacy reasons.
+#[derive(serde::Serialize)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Status {
     /// The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
@@ -64,6 +65,7 @@ pub struct Status {
     /// A list of messages that carry the error details.  There is a common set of
     /// message types for APIs to use.
     #[prost(message, repeated, tag = "3")]
+    #[serde(skip)]
     pub details: ::prost::alloc::vec::Vec<::prost_types::Any>,
 }
 /// The canonical error codes for Google APIs.
