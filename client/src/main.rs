@@ -224,7 +224,7 @@ async fn main() -> Result<()> {
             )
             .await?;
 
-            println!("{:#?}", response);
+            println!("{}", serde_json::to_string_pretty(&response)?);
             Ok(())
         }
     }
