@@ -232,7 +232,16 @@ mod tests {
 
     #[test]
     fn test_try_convert_data_types() -> Result<()> {
-        let dar_path = "/Users/gyorgybalazsi/rust-client-toolbox/_daml/daml-ticketoffer/.daml/dist/daml-ticketoffer-0.0.1.dar";
+        let crate_root = std::env::var("CARGO_MANIFEST_DIR").unwrap();
+        let dar_path = std::path::PathBuf::from(&crate_root)
+            .join("..")
+            .join("_daml")
+            .join("daml-ticketoffer")
+            .join("main")
+            .join(".daml")
+            .join("dist")
+            .join("daml-ticketoffer-0.0.1.dar");
+        let dar_path = dar_path.to_str().expect("DAR path is not valid UTF-8");
         let parsed_dar = parse_dar(dar_path)?;
         let package = package_from_dar(dar_path)?;
 

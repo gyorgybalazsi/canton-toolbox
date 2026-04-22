@@ -401,7 +401,16 @@ mod tests {
 
     #[test]
     fn test_resolve_type_with_context() {
-        let dar_path = "/Users/gyorgybalazsi/rust-client-toolbox/_daml/daml-nested-test/main/.daml/dist/daml-nested-test-0.0.1.dar";
+        let crate_root = std::env::var("CARGO_MANIFEST_DIR").unwrap();
+        let dar_path = std::path::PathBuf::from(&crate_root)
+            .join("..")
+            .join("_daml")
+            .join("daml-nested-test")
+            .join("main")
+            .join(".daml")
+            .join("dist")
+            .join("daml-nested-test-0.0.1.dar");
+        let dar_path = dar_path.to_str().expect("DAR path is not valid UTF-8");
         let parsed_dar = parse_dar(dar_path).expect("Failed to parse DAR");
         let package = parsed_dar.packages.get(&parsed_dar.main_package_id)
             .expect("Main package not found");

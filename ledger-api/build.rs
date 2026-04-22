@@ -61,6 +61,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
         .type_attribute("com.daml.ledger.api.v2.ParticipantAuthorizationAdded", serialize)
         .type_attribute("com.daml.ledger.api.v2.ParticipantAuthorizationChanged", serialize)
         .type_attribute("com.daml.ledger.api.v2.ParticipantAuthorizationRevoked", serialize)
+        .type_attribute("com.daml.ledger.api.v2.ParticipantAuthorizationOnboarding", serialize)
         // google.rpc.Status (used in InterfaceView)
         .type_attribute("google.rpc.Status", serialize)
         // Timestamp fields — serialize as RFC3339 strings

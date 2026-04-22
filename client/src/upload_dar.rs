@@ -34,6 +34,8 @@ pub async fn upload_dars(
         let request = UploadDarFileRequest {
             dar_file: dar_bytes,
             submission_id: uuid::Uuid::new_v4().to_string(),
+            vetting_change: 0,
+            synchronizer_id: "".to_string(),
         };
 
         info!("Requesting DAR file upload: {:?}", dar_path);
@@ -151,7 +153,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_upload_dar_files() -> anyhow::Result<()> {
-        tracing_subscriber::fmt::init();
+        let _ = tracing_subscriber::fmt().with_test_writer().try_init();
 
         let crate_root = std::env::var("CARGO_MANIFEST_DIR").unwrap();
 

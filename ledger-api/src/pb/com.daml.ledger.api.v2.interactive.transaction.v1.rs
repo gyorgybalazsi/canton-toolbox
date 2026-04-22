@@ -3,19 +3,28 @@
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Fetch {
     /// Specific LF version of the node
+    ///
+    /// Required
     #[prost(string, tag = "1")]
     pub lf_version: ::prost::alloc::string::String,
+    /// Required
     #[prost(string, tag = "2")]
     pub contract_id: ::prost::alloc::string::String,
+    /// Required
     #[prost(string, tag = "3")]
     pub package_name: ::prost::alloc::string::String,
     /// The identifier uses the package-id reference format.
+    ///
+    /// Required
     #[prost(message, optional, tag = "4")]
     pub template_id: ::core::option::Option<super::super::super::Identifier>,
+    /// Required: must be non-empty
     #[prost(string, repeated, tag = "5")]
     pub signatories: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required: must be non-empty
     #[prost(string, repeated, tag = "6")]
     pub stakeholders: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required: must be non-empty
     #[prost(string, repeated, tag = "7")]
     pub acting_parties: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Optional
@@ -26,34 +35,51 @@ pub struct Fetch {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Exercise {
     /// Specific LF version of the node
+    ///
+    /// Required
     #[prost(string, tag = "1")]
     pub lf_version: ::prost::alloc::string::String,
+    /// Required
     #[prost(string, tag = "2")]
     pub contract_id: ::prost::alloc::string::String,
+    /// Required
     #[prost(string, tag = "3")]
     pub package_name: ::prost::alloc::string::String,
     /// The identifier uses the package-id reference format.
+    ///
+    /// Required
     #[prost(message, optional, tag = "4")]
     pub template_id: ::core::option::Option<super::super::super::Identifier>,
+    /// Required: must be non-empty
     #[prost(string, repeated, tag = "5")]
     pub signatories: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required: must be non-empty
     #[prost(string, repeated, tag = "6")]
     pub stakeholders: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required: must be non-empty
     #[prost(string, repeated, tag = "7")]
     pub acting_parties: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// The identifier uses the package-id reference format.
+    ///
+    /// Optional
     #[prost(message, optional, tag = "8")]
     pub interface_id: ::core::option::Option<super::super::super::Identifier>,
+    /// Required
     #[prost(string, tag = "9")]
     pub choice_id: ::prost::alloc::string::String,
+    /// Required
     #[prost(message, optional, tag = "10")]
     pub chosen_value: ::core::option::Option<super::super::super::Value>,
+    /// Required
     #[prost(bool, tag = "11")]
     pub consuming: bool,
+    /// Optional: can be empty
     #[prost(string, repeated, tag = "12")]
     pub children: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional
     #[prost(message, optional, tag = "13")]
     pub exercise_result: ::core::option::Option<super::super::super::Value>,
+    /// Optional: can be empty
     #[prost(string, repeated, tag = "14")]
     pub choice_observers: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
@@ -61,35 +87,47 @@ pub struct Exercise {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Create {
     /// Specific LF version of the node
+    ///
+    /// Required
     #[prost(string, tag = "1")]
     pub lf_version: ::prost::alloc::string::String,
+    /// Required
     #[prost(string, tag = "2")]
     pub contract_id: ::prost::alloc::string::String,
+    /// Required
     #[prost(string, tag = "3")]
     pub package_name: ::prost::alloc::string::String,
     /// The identifier uses the package-id reference format.
+    ///
+    /// Required
     #[prost(message, optional, tag = "4")]
     pub template_id: ::core::option::Option<super::super::super::Identifier>,
+    /// Required
     #[prost(message, optional, tag = "5")]
     pub argument: ::core::option::Option<super::super::super::Value>,
+    /// Required: must be non-empty
     #[prost(string, repeated, tag = "6")]
     pub signatories: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required: must be non-empty
     #[prost(string, repeated, tag = "7")]
     pub stakeholders: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Rollback Node
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Rollback {
+    /// Required: must be non-empty
     #[prost(string, repeated, tag = "1")]
     pub children: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Node {
+    /// Required
     #[prost(oneof = "node::NodeType", tags = "1, 2, 3, 4")]
     pub node_type: ::core::option::Option<node::NodeType>,
 }
 /// Nested message and enum types in `Node`.
 pub mod node {
+    /// Required
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum NodeType {
         #[prost(message, tag = "1")]
