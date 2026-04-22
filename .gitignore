@@ -8,6 +8,7 @@ ledger-explorer/config/config.toml
 ledger-graph-ui/config.toml
 sync.log
 ledger-graph-ui/ui.log
+test/*.log
 plans
 .claude/
 .tokensave/
