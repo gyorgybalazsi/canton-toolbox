@@ -11,6 +11,9 @@ use tracing::info;
 /// Starts the Daml sandbox in the background.
 /// Returns Ok(SandboxGuard) if the process starts successfully.
 pub async fn start_sandbox(package_root: PathBuf, dar_path: PathBuf, sandbox_port: u16) -> Result<SandboxGuard> {
+    // dpm sandbox listens on 6865/gRPC and 6864/HTTP by default; a custom port
+    // would require a Canton config file, which no current caller needs.
+    assert_eq!(sandbox_port, 6865, "dpm sandbox only supports the default port 6865");
     let mut child;
     unsafe {
         child = Command::new("dpm")
@@ -18,8 +21,6 @@ pub async fn start_sandbox(package_root: PathBuf, dar_path: PathBuf, sandbox_por
                 "sandbox",
                 "--dar",
                 dar_path.to_str().unwrap(),
-                "--ledger-api-port",
-                &sandbox_port.to_string(),
             ])
             .current_dir(&package_root)
             .stdout(Stdio::piped())
@@ -93,9 +94,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_start_and_close_sandbox() {
-        tracing_subscriber::fmt::init();
-        let package_root = PathBuf::from("/Users/gyorgybalazsi/rust-client-toolbox/_daml/daml-asset");
-        let dar_path = PathBuf::from("/Users/gyorgybalazsi/rust-client-toolbox/_daml/daml-asset/.daml/dist/daml-asset-0.0.1.dar");
+        let _ = tracing_subscriber::fmt().with_test_writer().try_init();
+        let crate_root = std::env::var("CARGO_MANIFEST_DIR").unwrap();
+        let package_root = PathBuf::from(&crate_root)
+            .join("..")
+            .join("_daml")
+            .join("daml-asset");
+        let dar_path = package_root.join(".daml").join("dist").join("daml-asset-0.0.1.dar");
         let sandbox_port = 6865;
         let _guard = start_sandbox(package_root, dar_path, sandbox_port)
             .await

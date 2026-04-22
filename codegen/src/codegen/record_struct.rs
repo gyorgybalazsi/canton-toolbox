@@ -503,13 +503,14 @@ mod tests {
 
     #[test]
     fn test_generate_rust_structs_from_dar() {
-        tracing_subscriber::fmt().init();
+        let _ = tracing_subscriber::fmt().with_test_writer().try_init();
         let crate_root = std::env::var("CARGO_MANIFEST_DIR").unwrap();
         info!("Crate root: {}", crate_root);
         let dar_path = std::path::PathBuf::from(&crate_root)
             .join("..")
             .join("_daml")
             .join("daml-ticketoffer")
+            .join("main")
             .join(".daml")
             .join("dist")
             .join("daml-ticketoffer-0.0.1.dar")

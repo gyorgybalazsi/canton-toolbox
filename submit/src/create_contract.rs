@@ -59,6 +59,7 @@ mod tests {
     use super::*;
     use client::jwt::fake_jwt_for_user;
     use client::party_management::get_parties::get_parties;
+    use client::run_script::run_script;
     use client::testutils::start_sandbox;
     use tokio;
     use tracing::info;
@@ -83,9 +84,14 @@ mod tests {
             .expect("Failed to canonicalize package_root");
 
         info!("Starting DAML sandbox at {}", package_root.display());
-        let dar_path = package_root.join(".daml").join("dist").join("daml-asset-0.0.1.dar");
+        let dar_path = package_root.join("main").join(".daml").join("dist").join("daml-asset-0.0.1.dar");
+        let test_dar_path = package_root.join("test").join(".daml").join("dist").join("daml-asset-test-0.0.1.dar");
 
         let _guard = start_sandbox(package_root, dar_path, sandbox_port).await?;
+
+        // Allocate parties by running the test DAR's setup script
+        let result = run_script("localhost", sandbox_port, &test_dar_path, "Test:setup")?;
+        info!("Script result: {}", result);
 
         // Setup test values
         let package_id = "#daml-asset".to_string();
